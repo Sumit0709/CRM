@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserModel, Long> {
@@ -16,4 +17,5 @@ public interface UserRepository extends JpaRepository<UserModel, Long> {
     @Modifying
     @Query("UPDATE UserModel u SET u.reportsTo.id = :supervisorId WHERE u.id = :userId")
     int updateUserReporting(Long userId, Long supervisorId);
+
 }

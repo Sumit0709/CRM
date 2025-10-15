@@ -1,5 +1,6 @@
 package com.sumit.crm.controller;
 
+import com.sumit.crm.dto.client.ClientResponseDTO;
 import com.sumit.crm.dto.user.UpdateReportingDTO;
 import com.sumit.crm.dto.user.AllUserResponseDTO;
 import com.sumit.crm.model.UserModel;
@@ -19,8 +20,6 @@ public class UserController {
 
     @GetMapping("user")
     public List<AllUserResponseDTO> getUser(){
-        System.out.println("Getting User");
-
         List<AllUserResponseDTO> users = us.getAllUsers();
         return users;
 
@@ -54,6 +53,24 @@ public class UserController {
         else{
             return ResponseEntity.status(HttpStatus.OK).body("Successfully updated.");
         }
+    }
+
+    @GetMapping("user-subordinates")
+    public List<AllUserResponseDTO> getUserSubordinates(@RequestParam Long userId){
+
+        List<AllUserResponseDTO> users = us.getSubordinates(userId);
+        return users;
+
+    }
+
+    @GetMapping("user-clients")
+    public ResponseEntity<List<ClientResponseDTO>> getAllClientsHandledByUser(@RequestParam Long userId){
+
+        List<ClientResponseDTO> clients = us.getAllClients(userId);
+        if (clients == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok().body(clients);
     }
 
 }

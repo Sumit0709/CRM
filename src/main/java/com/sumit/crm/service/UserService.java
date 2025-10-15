@@ -1,6 +1,8 @@
 package com.sumit.crm.service;
 
+import com.sumit.crm.dto.client.ClientResponseDTO;
 import com.sumit.crm.dto.user.AllUserResponseDTO;
+import com.sumit.crm.model.ClientModel;
 import com.sumit.crm.model.UserModel;
 import com.sumit.crm.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,5 +86,44 @@ public class UserService {
         else{
             return 0;
         }
+    }
+
+    public List<AllUserResponseDTO> getSubordinates(Long userId){
+        List<AllUserResponseDTO> users = new ArrayList<>();
+
+        try{
+            users = userRepository
+                    .findById(userId)
+                    .orElse(new UserModel())
+                    .getSubordinates()
+                    .stream()
+                    .map(userModel -> {
+//                    userModel.set
+                        AllUserResponseDTO responseDTO = new AllUserResponseDTO(userModel);
+                        return responseDTO;
+                    })
+                    .collect(Collectors.toList());
+        }
+        catch (Exception e){
+            System.out.println("Error while getting Subordinates :: " + e.toString());
+        }
+
+        return users;
+    }
+
+    public List<ClientResponseDTO> getAllClients(Long userId) {
+
+        UserModel user = userRepository.findById(userId).orElse(null);
+        if(user == null){
+            return null;
+        }
+        List<ClientResponseDTO> clients = user
+                .getClients()
+                .stream()
+                .map(client -> new ClientResponseDTO(client))
+                .toList();
+
+        return clients;
+
     }
 }

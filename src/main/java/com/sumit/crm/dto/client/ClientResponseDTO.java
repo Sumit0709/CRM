@@ -1,67 +1,46 @@
-package com.sumit.crm.model;
+package com.sumit.crm.dto.client;
 
-import jakarta.persistence.*;
+import com.sumit.crm.model.ClientModel;
+import com.sumit.crm.model.LanguageModel;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "clients")
-public class ClientModel {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ClientResponseDTO {
+
     private Long id;
     private String clientName;
     private String company;
     private String email;
     private String phone;
-
     private String description;
-
+    private Long employeeId;
     private String callRecordingUrl;
     private String chatScreenshotUrl;
-
+    private LocalDateTime createdAt;
+    private List<LocalDateTime> contactedOn = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private LanguageModel preferredLanguage;
 
-    private List<LocalDateTime> contactedOn = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private UserModel employee;
-
-    private LocalDateTime createdAt;
-
-    public ClientModel() {
+    public ClientResponseDTO() {
     }
 
-    public ClientModel(Long id, String clientName, String company, String email, String phone, String description, String callRecordingUrl, String chatScreenshotUrl, UserModel employee, LocalDateTime createdAt) {
-        this.id = id;
-        this.clientName = clientName;
-        this.company = company;
-        this.email = email;
-        this.phone = phone;
-        this.description = description;
-        this.callRecordingUrl = callRecordingUrl;
-        this.chatScreenshotUrl = chatScreenshotUrl;
-        this.employee = employee;
-        this.createdAt = createdAt;
-    }
-
-    @Override
-    public String toString() {
-        return "ClientModel{" +
-                "id=" + id +
-                ", clientName='" + clientName + '\'' +
-                ", company='" + company + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", description='" + description + '\'' +
-                ", callRecordingUrl='" + callRecordingUrl + '\'' +
-                ", chatScreenshotUrl='" + chatScreenshotUrl + '\'' +
-                ", employee=" + employee +
-                ", createdAt=" + createdAt +
-                '}';
+    public ClientResponseDTO(ClientModel client) {
+        this.id = client.getId();
+        this.clientName = client.getClientName();
+        this.company = client.getCompany();
+        this.email = client.getEmail();
+        this.phone = client.getPhone();
+        this.description = client.getDescription();
+        this.employeeId = client.getEmployee() != null? client.getEmployee().getId(): null;
+        this.callRecordingUrl = client.getCallRecordingUrl();
+        this.chatScreenshotUrl = client.getChatScreenshotUrl();
+        this.createdAt = client.getCreatedAt();
+        this.contactedOn = client.getContactedOn();
+        this.preferredLanguage = client.getPreferredLanguage();
     }
 
     public Long getId() {
@@ -112,6 +91,14 @@ public class ClientModel {
         this.description = description;
     }
 
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
     public String getCallRecordingUrl() {
         return callRecordingUrl;
     }
@@ -128,14 +115,6 @@ public class ClientModel {
         this.chatScreenshotUrl = chatScreenshotUrl;
     }
 
-    public UserModel getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(UserModel employee) {
-        this.employee = employee;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -144,19 +123,19 @@ public class ClientModel {
         this.createdAt = createdAt;
     }
 
-    public LanguageModel getPreferredLanguage() {
-        return preferredLanguage;
-    }
-
-    public void setPreferredLanguage(LanguageModel preferredLanguage) {
-        this.preferredLanguage = preferredLanguage;
-    }
-
     public List<LocalDateTime> getContactedOn() {
         return contactedOn;
     }
 
     public void setContactedOn(List<LocalDateTime> contactedOn) {
         this.contactedOn = contactedOn;
+    }
+
+    public LanguageModel getPreferredLanguage() {
+        return preferredLanguage;
+    }
+
+    public void setPreferredLanguage(LanguageModel preferredLanguage) {
+        this.preferredLanguage = preferredLanguage;
     }
 }
