@@ -18,13 +18,9 @@ public class ClientModel {
 
     private String description;
 
-    private String callRecordingUrl;
-    private String chatScreenshotUrl;
-
     @Enumerated(EnumType.STRING)
     private LanguageModel preferredLanguage;
 
-    private List<LocalDateTime> contactedOn = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
@@ -32,20 +28,23 @@ public class ClientModel {
 
     private LocalDateTime createdAt;
 
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<ClientContactHistory> contactHistory = new ArrayList<>();
+
     public ClientModel() {
     }
 
-    public ClientModel(Long id, String clientName, String company, String email, String phone, String description, String callRecordingUrl, String chatScreenshotUrl, UserModel employee, LocalDateTime createdAt) {
+    public ClientModel(Long id, String clientName, String company, String email, String phone, String description, LanguageModel preferredLanguage, UserModel employee, LocalDateTime createdAt, List<ClientContactHistory> contactHistory) {
         this.id = id;
         this.clientName = clientName;
         this.company = company;
         this.email = email;
         this.phone = phone;
         this.description = description;
-        this.callRecordingUrl = callRecordingUrl;
-        this.chatScreenshotUrl = chatScreenshotUrl;
+        this.preferredLanguage = preferredLanguage;
         this.employee = employee;
         this.createdAt = createdAt;
+        this.contactHistory = contactHistory;
     }
 
     @Override
@@ -57,10 +56,10 @@ public class ClientModel {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", description='" + description + '\'' +
-                ", callRecordingUrl='" + callRecordingUrl + '\'' +
-                ", chatScreenshotUrl='" + chatScreenshotUrl + '\'' +
+                ", preferredLanguage=" + preferredLanguage +
                 ", employee=" + employee +
                 ", createdAt=" + createdAt +
+                ", contactHistory=" + contactHistory +
                 '}';
     }
 
@@ -112,22 +111,6 @@ public class ClientModel {
         this.description = description;
     }
 
-    public String getCallRecordingUrl() {
-        return callRecordingUrl;
-    }
-
-    public void setCallRecordingUrl(String callRecordingUrl) {
-        this.callRecordingUrl = callRecordingUrl;
-    }
-
-    public String getChatScreenshotUrl() {
-        return chatScreenshotUrl;
-    }
-
-    public void setChatScreenshotUrl(String chatScreenshotUrl) {
-        this.chatScreenshotUrl = chatScreenshotUrl;
-    }
-
     public UserModel getEmployee() {
         return employee;
     }
@@ -152,11 +135,11 @@ public class ClientModel {
         this.preferredLanguage = preferredLanguage;
     }
 
-    public List<LocalDateTime> getContactedOn() {
-        return contactedOn;
+    public List<ClientContactHistory> getContactHistory() {
+        return contactHistory;
     }
 
-    public void setContactedOn(List<LocalDateTime> contactedOn) {
-        this.contactedOn = contactedOn;
+    public void setContactHistory(List<ClientContactHistory> contactHistory) {
+        this.contactHistory = contactHistory;
     }
 }

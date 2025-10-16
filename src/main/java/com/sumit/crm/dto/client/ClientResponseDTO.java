@@ -1,5 +1,6 @@
 package com.sumit.crm.dto.client;
 
+import com.sumit.crm.model.ClientContactHistory;
 import com.sumit.crm.model.ClientModel;
 import com.sumit.crm.model.LanguageModel;
 import jakarta.persistence.EnumType;
@@ -18,10 +19,8 @@ public class ClientResponseDTO {
     private String phone;
     private String description;
     private Long employeeId;
-    private String callRecordingUrl;
-    private String chatScreenshotUrl;
     private LocalDateTime createdAt;
-    private List<LocalDateTime> contactedOn = new ArrayList<>();
+    private List<ClientContactHistory> contactHistory = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private LanguageModel preferredLanguage;
 
@@ -36,10 +35,8 @@ public class ClientResponseDTO {
         this.phone = client.getPhone();
         this.description = client.getDescription();
         this.employeeId = client.getEmployee() != null? client.getEmployee().getId(): null;
-        this.callRecordingUrl = client.getCallRecordingUrl();
-        this.chatScreenshotUrl = client.getChatScreenshotUrl();
         this.createdAt = client.getCreatedAt();
-        this.contactedOn = client.getContactedOn();
+        this.contactHistory = client.getContactHistory();
         this.preferredLanguage = client.getPreferredLanguage();
     }
 
@@ -99,22 +96,6 @@ public class ClientResponseDTO {
         this.employeeId = employeeId;
     }
 
-    public String getCallRecordingUrl() {
-        return callRecordingUrl;
-    }
-
-    public void setCallRecordingUrl(String callRecordingUrl) {
-        this.callRecordingUrl = callRecordingUrl;
-    }
-
-    public String getChatScreenshotUrl() {
-        return chatScreenshotUrl;
-    }
-
-    public void setChatScreenshotUrl(String chatScreenshotUrl) {
-        this.chatScreenshotUrl = chatScreenshotUrl;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -123,13 +104,6 @@ public class ClientResponseDTO {
         this.createdAt = createdAt;
     }
 
-    public List<LocalDateTime> getContactedOn() {
-        return contactedOn;
-    }
-
-    public void setContactedOn(List<LocalDateTime> contactedOn) {
-        this.contactedOn = contactedOn;
-    }
 
     public LanguageModel getPreferredLanguage() {
         return preferredLanguage;
@@ -137,5 +111,13 @@ public class ClientResponseDTO {
 
     public void setPreferredLanguage(LanguageModel preferredLanguage) {
         this.preferredLanguage = preferredLanguage;
+    }
+
+    public List<ClientContactHistory> getContactHistory() {
+        return contactHistory;
+    }
+
+    public void setContactHistory(List<ClientContactHistory> contactHistory) {
+        this.contactHistory = contactHistory;
     }
 }

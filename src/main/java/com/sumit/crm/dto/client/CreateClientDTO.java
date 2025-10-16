@@ -12,6 +12,8 @@ public class CreateClientDTO {
     private String phone;
     private String description;
     private Long employeeId;
+    private String callRecordingUrl;
+    private String chatScreenshotUrl;
 
     @Enumerated(EnumType.STRING)
     private LanguageModel preferredLanguage;
