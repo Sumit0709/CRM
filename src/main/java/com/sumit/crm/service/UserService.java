@@ -1,129 +1,52 @@
 package com.sumit.crm.service;
 
-import com.sumit.crm.dto.client.ClientResponseDTO;
-import com.sumit.crm.dto.user.AllUserResponseDTO;
-import com.sumit.crm.model.ClientModel;
-import com.sumit.crm.model.UserModel;
+
+import com.sumit.crm.exception.customException.user.UserNotFoundException;
+import com.sumit.crm.model.Client;
+import com.sumit.crm.model.Users;
+import com.sumit.crm.repository.ClientRepository;
 import com.sumit.crm.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final ClientRepository clientRepository;
 
-    public List<AllUserResponseDTO> getAllUsers(){
-        List<AllUserResponseDTO> users = new ArrayList<>();
-
-        try{
-            users = userRepository
-                    .findAll()
-                    .stream()
-                    .map(userModel -> {
-//                    userModel.set
-                        AllUserResponseDTO responseDTO = new AllUserResponseDTO(userModel);
-                        return responseDTO;
-                    })
-                    .collect(Collectors.toList());
-        }
-        catch (Exception e){
-            System.out.println("Error while getting all users :: " + e.toString());
-        }
-
+    public List<Users> getAllUsers(){
+        List<Users> users = userRepository.findAll();
         return users;
     }
 
-    public UserModel saveUser(UserModel user){
-        UserModel savedUser = new UserModel();
-        try{
-            savedUser = userRepository.save(user);
-        }
-        catch (Exception e){
+    @Transactional
+    public List<Users> getAllUsersUnderManager(Long managerId) throws RuntimeException{
+        Users manager = userRepository.findById(managerId).orElseThrow(() -> new UserNotFoundException("User does not exist."));
 
-        }
-        return savedUser;
-    }
-
-    public Boolean deleteUser(long userId) {
-
-        Optional<UserModel> user = userRepository.findById(userId);
-        if(user.isPresent()){
-            try {
-                userRepository.deleteById(userId);
-                return true;
-            }
-            catch (Exception e){
-                System.out.println("Exception while deleting user :: " + e.toString());
-                return false;
-            }
-        }
-        else{
-            return false;
-        }
-
-    }
-
-    public int updateUserReporting(Long userId, Long supervisorId) {
-
-        Optional<UserModel> user = userRepository.findById(userId);
-        if(user.isPresent()){
-            try {
-                return userRepository.updateUserReporting(userId, supervisorId);
-            }
-            catch (Exception e){
-                System.out.println("Exception while deleting user :: " + e.toString());
-                return 0;
-            }
-        }
-        else{
-            return 0;
-        }
-    }
-
-    public List<AllUserResponseDTO> getSubordinates(Long userId){
-        List<AllUserResponseDTO> users = new ArrayList<>();
-
-        try{
-            users = userRepository
-                    .findById(userId)
-                    .orElse(new UserModel())
-                    .getSubordinates()
-                    .stream()
-                    .map(userModel -> {
-//                    userModel.set
-                        AllUserResponseDTO responseDTO = new AllUserResponseDTO(userModel);
-                        return responseDTO;
-                    })
-                    .collect(Collectors.toList());
-        }
-        catch (Exception e){
-            System.out.println("Error while getting Subordinates :: " + e.toString());
-        }
-
+        List<Users> users = userRepository.findByManager(manager);
         return users;
     }
 
-    public List<ClientResponseDTO> getAllClients(Long userId) {
+    @Transactional
+    public Users getManager(Long userId){
+        Users user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User does not exist."));
+        Users manager = userRepository.findById(user.getManager().getId()).orElseThrow(() -> new UserNotFoundException("Manager does not exist."));
 
-        UserModel user = userRepository.findById(userId).orElse(null);
-        if(user == null){
-            return null;
-        }
-        List<ClientResponseDTO> clients = user
-                .getClients()
-                .stream()
-                .map(client -> new ClientResponseDTO(client))
-                .toList();
+        return manager;
+    }
 
+    @Transactional
+    public List<Client> getAllClientsAssignedToUser(Long userId){
+        Users user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User does not exist."));
+        List<Client> clients = clientRepository.findByAssignedTo(user);
+//                user.getClients();
         return clients;
-
     }
+
+
 }

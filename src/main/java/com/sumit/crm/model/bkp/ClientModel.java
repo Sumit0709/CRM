@@ -1,43 +1,66 @@
-//package com.sumit.crm.dto.client;
+//package com.sumit.crm.model.bkp;
 //
-//import com.sumit.crm.model.bkp.ClientContactHistory;
-//import com.sumit.crm.model.bkp.ClientModel;
-//import com.sumit.crm.model.bkp.LanguageModel;
-//import jakarta.persistence.EnumType;
-//import jakarta.persistence.Enumerated;
+//import jakarta.persistence.*;
 //
 //import java.time.LocalDateTime;
 //import java.util.ArrayList;
 //import java.util.List;
 //
-//public class ClientResponseDTO {
-//
+//@Entity
+//@Table(name = "clients")
+//public class ClientModel {
+//    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    private Long id;
 //    private String clientName;
 //    private String company;
 //    private String email;
 //    private String phone;
+//
 //    private String description;
-//    private Long employeeId;
-//    private LocalDateTime createdAt;
-//    private List<ClientContactHistory> contactHistory = new ArrayList<>();
+//
 //    @Enumerated(EnumType.STRING)
 //    private LanguageModel preferredLanguage;
 //
-//    public ClientResponseDTO() {
+//
+//    @ManyToOne
+//    @JoinColumn(name = "employee_id")
+//    private UserModel employee;
+//
+//    private LocalDateTime createdAt;
+//
+//    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+//    private List<ClientContactHistory> contactHistory = new ArrayList<>();
+//
+//    public ClientModel() {
 //    }
 //
-//    public ClientResponseDTO(ClientModel client) {
-//        this.id = client.getId();
-//        this.clientName = client.getClientName();
-//        this.company = client.getCompany();
-//        this.email = client.getEmail();
-//        this.phone = client.getPhone();
-//        this.description = client.getDescription();
-//        this.employeeId = client.getEmployee() != null? client.getEmployee().getId(): null;
-//        this.createdAt = client.getCreatedAt();
-//        this.contactHistory = client.getContactHistory();
-//        this.preferredLanguage = client.getPreferredLanguage();
+//    public ClientModel(Long id, String clientName, String company, String email, String phone, String description, LanguageModel preferredLanguage, UserModel employee, LocalDateTime createdAt, List<ClientContactHistory> contactHistory) {
+//        this.id = id;
+//        this.clientName = clientName;
+//        this.company = company;
+//        this.email = email;
+//        this.phone = phone;
+//        this.description = description;
+//        this.preferredLanguage = preferredLanguage;
+//        this.employee = employee;
+//        this.createdAt = createdAt;
+//        this.contactHistory = contactHistory;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "ClientModel{" +
+//                "id=" + id +
+//                ", clientName='" + clientName + '\'' +
+//                ", company='" + company + '\'' +
+//                ", email='" + email + '\'' +
+//                ", phone='" + phone + '\'' +
+//                ", description='" + description + '\'' +
+//                ", preferredLanguage=" + preferredLanguage +
+//                ", employee=" + employee +
+//                ", createdAt=" + createdAt +
+//                ", contactHistory=" + contactHistory +
+//                '}';
 //    }
 //
 //    public Long getId() {
@@ -88,12 +111,12 @@
 //        this.description = description;
 //    }
 //
-//    public Long getEmployeeId() {
-//        return employeeId;
+//    public UserModel getEmployee() {
+//        return employee;
 //    }
 //
-//    public void setEmployeeId(Long employeeId) {
-//        this.employeeId = employeeId;
+//    public void setEmployee(UserModel employee) {
+//        this.employee = employee;
 //    }
 //
 //    public LocalDateTime getCreatedAt() {
@@ -103,7 +126,6 @@
 //    public void setCreatedAt(LocalDateTime createdAt) {
 //        this.createdAt = createdAt;
 //    }
-//
 //
 //    public LanguageModel getPreferredLanguage() {
 //        return preferredLanguage;

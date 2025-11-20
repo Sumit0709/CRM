@@ -1,77 +1,34 @@
 package com.sumit.crm.controller;
 
-import com.sumit.crm.dto.client.ClientResponseDTO;
-import com.sumit.crm.dto.user.UpdateReportingDTO;
-import com.sumit.crm.dto.user.AllUserResponseDTO;
-import com.sumit.crm.model.UserModel;
+
+import com.sumit.crm.model.Users;
 import com.sumit.crm.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 public class UserController {
 
-    @Autowired
-    UserService us;
+    private final UserService userService;
 
-    @GetMapping("user")
-    public List<AllUserResponseDTO> getUser(){
-        List<AllUserResponseDTO> users = us.getAllUsers();
-        return users;
-
+    @GetMapping("users")
+    public ResponseEntity<?> getAllUsers(){
+        List<Users> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @PostMapping("user")
-    public UserModel createUser(@RequestBody UserModel user){
-
-        return us.saveUser(user);
+    @GetMapping("users/manager")
+    public ResponseEntity<?> getAllUsersUnderManager(@RequestParam Long managerId){
+//        Long managerId = 9L;
+        List<Users> users = userService.getAllUsersUnderManager(managerId);
+        System.out.println("USERS under manager "+managerId);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
-
-    @DeleteMapping("user")
-    public ResponseEntity<String> deleteUser(@RequestParam long userId){
-        Boolean isUserDeleted = us.deleteUser(userId);
-        if(isUserDeleted){
-            return ResponseEntity.ok().build();
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Deletion failed");
-        }
-    }
-
-    @PutMapping("user-reporting")
-    public ResponseEntity<String> updateUserReporting(@RequestBody UpdateReportingDTO reportingDto){
-
-        int updatedUserCount = us.updateUserReporting(reportingDto.getUserId(), reportingDto.getSupervisorId());
-
-        if(updatedUserCount == 0){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed.");
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.OK).body("Successfully updated.");
-        }
-    }
-
-    @GetMapping("user-subordinates")
-    public List<AllUserResponseDTO> getUserSubordinates(@RequestParam Long userId){
-
-        List<AllUserResponseDTO> users = us.getSubordinates(userId);
-        return users;
-
-    }
-
-    @GetMapping("user-clients")
-    public ResponseEntity<List<ClientResponseDTO>> getAllClientsHandledByUser(@RequestParam Long userId){
-
-        List<ClientResponseDTO> clients = us.getAllClients(userId);
-        if (clients == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.ok().body(clients);
-    }
-
-
 }
