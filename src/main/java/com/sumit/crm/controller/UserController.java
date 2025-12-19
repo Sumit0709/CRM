@@ -1,7 +1,7 @@
 package com.sumit.crm.controller;
 
 
-import com.sumit.crm.model.Users;
+import com.sumit.crm.dto.user.UserResponseDTO;
 import com.sumit.crm.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,15 +20,19 @@ public class UserController {
 
     @GetMapping("users")
     public ResponseEntity<?> getAllUsers(){
-        List<Users> users = userService.getAllUsers();
+        List<UserResponseDTO> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping("users/manager")
+    @GetMapping("users/under")
     public ResponseEntity<?> getAllUsersUnderManager(@RequestParam Long managerId){
-//        Long managerId = 9L;
-        List<Users> users = userService.getAllUsersUnderManager(managerId);
-        System.out.println("USERS under manager "+managerId);
+        List<UserResponseDTO> users = userService.getAllUsersUnderManager(managerId);
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("users/manager_for")
+    public ResponseEntity<?> getManagerForUser(@RequestParam Long userId){
+        UserResponseDTO manager = userService.getManagerForUser(userId);
+        return new ResponseEntity<>(manager, HttpStatus.OK);
     }
 }

@@ -1,7 +1,7 @@
 package com.sumit.crm;
 
 import com.sumit.crm.model.Client;
-import com.sumit.crm.model.Users;
+import com.sumit.crm.model.User;
 import com.sumit.crm.service.ClientService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class ClientTest {
     public void testGetUserAssignedToClient(){
         Long clientId = 4L;
         try {
-            Users user = clientService.getUserAssignedToClient(clientId);
+            User user = clientService.getUserAssignedToClient(clientId);
             System.out.println(user);
         }
         catch (Exception e){

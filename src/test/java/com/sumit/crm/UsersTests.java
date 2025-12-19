@@ -1,8 +1,8 @@
 package com.sumit.crm;
 
 
+import com.sumit.crm.dto.user.UserResponseDTO;
 import com.sumit.crm.model.Client;
-import com.sumit.crm.model.Users;
 import com.sumit.crm.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +18,9 @@ public class UsersTests {
 
     @Test
     public void testAllUsers(){
-        List<Users> users = userService.getAllUsers();
+        List<UserResponseDTO> users = userService.getAllUsers();
         System.out.println("All users -");
-        for(Users user: users)
+        for(UserResponseDTO user: users)
             System.out.println(user);
     }
 
@@ -28,9 +28,9 @@ public class UsersTests {
     public void testGetAllUsersUnderManager(){
         Long managerId = 9L;
         try{
-            List<Users> users = userService.getAllUsersUnderManager(managerId);
+            List<UserResponseDTO> users = userService.getAllUsersUnderManager(managerId);
             System.out.println("USERS under manager "+managerId);
-            for(Users user: users)
+            for(UserResponseDTO user: users)
                 System.out.println(user);
         }
         catch (Exception e){
