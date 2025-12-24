@@ -2,13 +2,12 @@ package com.sumit.crm.controller;
 
 
 import com.sumit.crm.dto.user.UserResponseDTO;
+import com.sumit.crm.model.User;
 import com.sumit.crm.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +16,13 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+
+    @PostMapping("user")
+    public ResponseEntity<?> createUser(@RequestBody User user){
+//        System.out.println(user);
+        UserResponseDTO response =  userService.saveUser(user);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @GetMapping("users")
     public ResponseEntity<?> getAllUsers(){

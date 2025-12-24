@@ -52,7 +52,7 @@ public class Client {
     @ToString.Exclude
     private Employee assignedTo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_company")
     @ToString.Exclude
     private ClientCompany clientCompany;

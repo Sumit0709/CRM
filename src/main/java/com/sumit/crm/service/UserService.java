@@ -1,7 +1,9 @@
 package com.sumit.crm.service;
 
 
+import com.sumit.crm.dto.employee.EmployeeResponseDTO;
 import com.sumit.crm.dto.user.UserResponseDTO;
+import com.sumit.crm.exception.customException.user.UserException;
 import com.sumit.crm.exception.customException.user.UserNotFoundException;
 import com.sumit.crm.model.Client;
 import com.sumit.crm.model.User;
@@ -57,5 +59,22 @@ public class UserService {
         return new ArrayList<>();
     }
 
+    @Transactional
+    public UserResponseDTO saveUser(User user) {
 
+        User savedUser  = userRepository.findByEmail(user.getEmail()).orElse(null);
+
+        if(savedUser != null) {
+            throw new UserException("User Already Exists!");
+        }
+
+//        try {
+            savedUser = userRepository.save(user);
+            return new UserResponseDTO(savedUser);
+//        }
+//        catch (Exception ex){
+//            return null;
+//        }
+
+    }
 }

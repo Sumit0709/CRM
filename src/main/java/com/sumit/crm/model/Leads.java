@@ -46,7 +46,7 @@ public class Leads {
     @Column(name="brief_description")
     private String briefDescription;
 
-    @OneToOne(mappedBy = "convertedFromLead")
+    @OneToOne(mappedBy = "convertedFromLead", fetch = FetchType.LAZY)
     private Client convertedToClient;
 
     @CreationTimestamp

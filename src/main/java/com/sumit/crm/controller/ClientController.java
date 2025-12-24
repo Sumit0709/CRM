@@ -10,13 +10,17 @@
 //
 //import java.util.List;
 //
+
+//import org.springframework.web.bind.annotation.RequestMapping;
+
 //@RestController()
+//@RequestMapping("/client")
 //public class ClientController {
 //
 //    @Autowired
 //    ClientService clientService;
 //
-//    @GetMapping("client")
+//    @GetMapping("/")
 //    public ClientResponseDTO getClient(@RequestParam Long clientId){
 //        return clientService.getClientById(clientId);
 //    }
